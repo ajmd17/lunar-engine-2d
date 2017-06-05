@@ -6,6 +6,8 @@ function Player(x, y) {
     new PhysicsObject(x, y, 32, 64, true)
   );
 
+  this.textNode = new TextNode('Player name here');
+
   this.frameCounter = 0;
 
   this.spriteParts = [
@@ -35,15 +37,23 @@ Player.prototype = {
     }
   },
 
-  render: function (canvas, context, camera) {
+  render: function (canvas, context, camera, x, y) {
     for (var i = 0; i < this.spriteParts.length; i++) {
       this.spriteParts[i].render(
         canvas,
         context,
         camera,
-        this.entity.getX(),
-        this.entity.getY() + (i * this.spriteParts[i].height)
+        x + this.entity.getX(),
+        y + this.entity.getY() + (i * this.spriteParts[i].height)
       );
     }
+
+    this.textNode.render(
+      canvas,
+      context,
+      camera,
+      x + this.entity.getX(),
+      y + this.entity.getY()
+    );
   }
 };

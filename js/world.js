@@ -1,5 +1,5 @@
 function World() {
-  this.entities = [];
+  this.rootNode = new Entity(0, 0, null, null);
   this.physicsWorld = new PhysicsWorld;
   this.physicsWorld.enableDebugRender = true;
 
@@ -11,17 +11,16 @@ function World() {
 
 World.prototype = {
   addEntity: function (entity) {
-    this.entities.push(entity);
-
+    this.rootNode.addChild(entity);
     if (typeof entity.added === 'function') {
       entity.added(this);
     }
   },
 
   removeEntity: function (entity) {
-    var index = this.entities.indexOf(entity);
+    var index = this.rootNode.children.indexOf(entity);
     if (index != -1) {
-      this.entities.splice(index, 1);
+      this.rootNode.children.splice(index, 1);
     }
     
     if (typeof entity.removed === 'function') {
@@ -30,15 +29,11 @@ World.prototype = {
   },
 
   update: function () {
-    for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].update();
-    }
+    this.rootNode.update();
   },
 
   render: function (canvas, context, camera) {
-    for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].render(canvas, context, camera);
-    }
+    this.rootNode.render(canvas, context, camera, 0, 0);
 
     if (this.physicsWorld.enableDebugRender) {
       this.physicsWorld.debugRender(canvas, context, camera);
